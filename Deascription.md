@@ -3,7 +3,7 @@ Trabajo final de C++
 * Crear una pequeña hoja de calculo en modo texto
 * Debe permitir asignar valores a una celda
 
-  > A1=20
+  >> A1=20
   
   > B1=30
   
