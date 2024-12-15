@@ -1,4 +1,5 @@
 #include "spreadsheet.h"
+#include "expression.h"
 #include <iostream>
 #include <sstream>
 #include <cctype>
@@ -32,32 +33,15 @@ void Spreadsheet::setCell(const string &key, const string &value) {
 double Spreadsheet::evaluateCell(const string &key) {
     if (!isCellValid(key)) throw invalid_argument("Celda inválida");
     Cell &cell = grid[key];
+
     if (!cell.hasFormula()) return cell.getValue();
 
-    // Evaluar fórmula simple (solo soporta operaciones básicas)
-    istringstream iss(cell.getFormula());
-    string token;
-    double result = 0, temp;
-    char op = '+';
+    // Crear un objeto Expression para evaluar la fórmula
+    Expression expr(cell.getFormula(), grid);  // Pasar la fórmula y los valores de las celdas
+    double result = expr.evaluate();  // Evaluar la fórmula respetando la jerarquía de operaciones
 
-    while (iss >> token) {
-        if (isCellValid(token)) {
-            temp = evaluateCell(token);
-        } else {
-            temp = stod(token);
-        }
-
-        switch (op) {
-            case '+': result += temp; break;
-            case '-': result -= temp; break;
-            case '*': result *= temp; break;
-            case '/': result /= temp; break;
-        }
-
-        iss >> op;
-    }
-
-    cell.setValue(result); // Cachear resultado
+    // Cachear el resultado
+    cell.setValue(result);
     return result;
 }
 
