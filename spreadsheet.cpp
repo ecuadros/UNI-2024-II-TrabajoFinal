@@ -36,6 +36,14 @@ double Spreadsheet::evaluateCell(const string &key) {
 
     if (!cell.hasFormula()) return cell.getValue();
 
+    // Crear un mapa de celdas con sus valores (no con objetos Cell)
+    map<string, double> cellValues;
+    for (const auto& entry : grid) {
+        if (!entry.second.hasFormula()) {  // Solo tomar celdas con valores, no fórmulas
+            cellValues[entry.first] = entry.second.getValue();
+        }
+    }
+    
     // Crear un objeto Expression para evaluar la fórmula
     Expression expr(cell.getFormula(), grid);  // Pasar la fórmula y los valores de las celdas
     double result = expr.evaluate();  // Evaluar la fórmula respetando la jerarquía de operaciones
