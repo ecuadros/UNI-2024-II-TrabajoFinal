@@ -5,7 +5,7 @@
 using namespace std;
 
 int main() {
-    Spreadsheet sheet(10, 10); // Hoja de 5x5
+    Spreadsheet sheet(10, 10); 
 
     string input;
     while (true) {
