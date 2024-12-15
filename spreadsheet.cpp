@@ -64,19 +64,22 @@ double Spreadsheet::evaluateCell(const string &key) {
 void Spreadsheet::display() {
     const int cellWidth = 10;
     cout << "    ";
-        for (char c = 'A'; c < 'A' + cols; ++c) cout << c << "      ";
+        for (char c = 'A'; c < 'A' + cols; ++c){
+            cout << setw(cellWidth) << c << " "; // Encabezados de las columnas
+        }
     cout << endl;
 
     for (int r = 1; r <= rows; ++r) {
         cout <<setw(2)<< r << " | ";
         for (char c = 'A'; c < 'A' + cols; ++c) {
             string key = string(1, c) + to_string(r);
+            string value;
             if (grid[key].hasFormula()){
                 value = to_string(grid[key].getValue());
             } else{
                 value = to_string(grid[key].getValue());
         }
-        cout << setw(cellWidth) << internal << value << " ";
+        cout << setw(cellWidth) << value << " ";
     }
     cout << endl;
     }
