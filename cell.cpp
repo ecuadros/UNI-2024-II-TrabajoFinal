@@ -1,11 +1,15 @@
 #include "cell.h"
+#include <iostream>
+#include <string>
+
+using namespace std;
 
 void Cell::setValue(double val) {
     value = val;
     isFormula = false;
 }
 
-void Cell::setFormula(const std::string &f) {
+void Cell::setFormula(const string &f) {
     formula = f;
     isFormula = true;
 }
@@ -14,7 +18,7 @@ double Cell::getValue() const {
     return value;
 }
 
-std::string Cell::getFormula() const {
+string Cell::getFormula() const {
     return formula;
 }
 
