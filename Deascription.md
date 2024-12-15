@@ -15,10 +15,11 @@ Trabajo final de C++
 
   Cada vez que ingrese un valor debe mostrar en forma de texto los valores de cada celda en forma de una matriz:
 
-   | A | B | C | D |
-1  |---|---|---|---|
-2  | 20 | 30 | 50 | 20.6 |
-3  |    |    | 1000 |
+|   | A | B | C | D |
+|---|---|---|---|---|
+|1  | 20 | 30 | 50 | 20.6 |
+|2  |    |    | 1000 |
+|3  |    |    |  |
   
 Ingrese fórmula: 
 
