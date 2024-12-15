@@ -3,15 +3,21 @@ Trabajo final de C++
 * Crear una pequeña hoja de calculo en modo texto
 * Debe permitir asignar valores a una celda
 
-  > A1=20
+  Ingrese fórmula: A1=20
   
-  > B1=30
+  Ingrese fórmula: B1=30
   
-  > C1=50
+  Ingrese fórmula: C1=50
 
 * Sin embargo, tambien debe permitir incluir otras celdas en la formula:
-  > D1=A1+B1/C1
-  
-  > B2=D1*A1
+  Ingrese fórmula:  D1=A1+B1/C1
+  Ingrese fórmula:  B2=C1*A1
 
-  Cada vez que ingrese un valor debe mostrar en forma de texto los valores de cada celda en forma de una matriz
+  Cada vez que ingrese un valor debe mostrar en forma de texto los valores de cada celda en forma de una matriz:
+
+   | A | B | C | D |
+1  |---|---|---|---|
+2  | 20 | 30 | 50 | 20.6 |
+3  |    |    | 1000 |
+  
+Ingrese fórmula: 
