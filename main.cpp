@@ -20,7 +20,7 @@ int main() {
             std::string value = input.substr(pos + 1);
             sheet.setCell(cell, value);
         } else {
-            cerr << "Entrada inválida." << endl;
+            cerr << "Entrada invalida." << endl;
         }
     }
     return 0;
