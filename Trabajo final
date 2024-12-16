@@ -1,0 +1,132 @@
+Excel.h
+#ifndef MINIEXCEL_H
+#define MINIEXCEL_H
+
+#include "Cell.h"
+#include <map>
+#include <string>
+#include <iostream>
+#include <stdexcept>
+
+class MiniExcel {
+private:
+    std::map<std::string, Cell> grid; // Mapa para almacenar celdas por ID
+
+    double getValue(const std::string& cellId); // Obtiene el valor de una celda
+    double evaluateFormula(const std::string& formula); // Evalúa fórmulas simples
+
+public:
+    void setCell(const std::string& cellId, const std::string& value); // Establece el contenido de una celda
+    std::string getCell(const std::string& cellId); // Obtiene el contenido de una celda
+    double evaluateCell(const std::string& cellId); // Evalúa el contenido de una celda
+    void printGrid(); // Imprime la cuadrícula
+};
+
+#endif // MINIEXCEL_H
+
+
+
+Excel.cpp
+#include "Excel.h"
+#include <iostream>
+
+// Constructor que inicializa la matriz con ceros
+Excel::Excel(int filas, int columnas) {
+    hoja.resize(filas, std::vector<double>(columnas, 0.0));
+}
+
+// Método para ingresar un dato en una celda específica
+void Excel::ingresarDato(int fila, int columna, double dato) {
+    if (fila >= 0 && columna >= 0 && fila < hoja.size() && columna < hoja[0].size()) {
+        hoja[fila][columna] = dato;
+    }
+    else {
+        std::cout << "Índice fuera de rango." << std::endl;
+    }
+}
+
+// Método para obtener un dato de una celda específica
+double Excel::obtenerDato(int fila, int columna) const {
+    if (fila >= 0 && columna >= 0 && fila < hoja.size() && columna < hoja[0].size()) {
+        return hoja[fila][columna];
+    }
+    else {
+        std::cout << "Índice fuera de rango." << std::endl;
+        return 0.0;
+    }
+}
+
+// Método para mostrar la hoja de cálculo completa
+void Excel::mostrarHoja() const {
+    for (const auto& fila : hoja) {
+        for (double dato : fila) {
+            std::cout << dato << "\t";
+        }
+        std::cout << std::endl;
+    }
+}
+
+// Método para sumar todos los valores de una fila
+void Excel::sumarFilas(int fila) const {
+    if (fila >= 0 && fila < hoja.size()) {
+        double suma = 0.0;
+        for (double valor : hoja[fila]) {
+            suma += valor;
+        }
+        std::cout << "Suma de la fila " << fila << ": " << suma << std::endl;
+    }
+    else {
+        std::cout << "Índice de fila fuera de rango." << std::endl;
+    }
+}
+
+// Método para sumar todos los valores de una columna
+void Excel::sumarColumnas(int columna) const {
+    if (columna >= 0 && columna < hoja[0].size()) {
+        double suma = 0.0;
+        for (const auto& fila : hoja) {
+            suma += fila[columna];
+        }
+        std::cout << "Suma de la columna " << columna << ": " << suma << std::endl;
+    }
+    else {
+        std::cout << "Índice de columna fuera de rango." << std::endl;
+    }
+}
+
+
+main.cpp
+#include <iostream>
+#include "Excel.h"
+
+int main() {
+    Excel miExcel(8, 9);
+
+    miExcel.ingresarDato(2, 3, 12.5);
+    miExcel.ingresarDato(1, 4, 9.3);
+    miExcel.ingresarDato(1, 0, 7.2);
+    miExcel.ingresarDato(5, 4, 8.4);
+    miExcel.ingresarDato(0, 3, 57.8);
+    miExcel.ingresarDato(7, 2, 12.8);
+    miExcel.ingresarDato(2, 1, 2.2);
+    miExcel.ingresarDato(4, 3, 22.4);
+    miExcel.ingresarDato(3, 3, 12.5);
+    miExcel.ingresarDato(0, 1, 32.1);
+    miExcel.ingresarDato(1, 3, 72.7);
+    miExcel.ingresarDato(0, 8, 32.1);
+
+    // Mostrar la hoja de cálculo
+    std::cout << "Proyecto MiniExcel - Kristopher Ortiz: " << std::endl;
+    std::cout << "Hoja de calculo:\n";
+    std::cout << "Filas y columnas: \n" << std::endl;
+    miExcel.mostrarHoja();
+
+    // Sumar una fila y una columna
+    std::cout << "\nLa suma de los elementos de la fila 0 es :\n";
+    miExcel.sumarFilas(0);
+
+    std::cout << "\nLa suma de los elementos de la columna 1 es: \n";
+    miExcel.sumarColumnas(1);
+
+    return 0;
+}
