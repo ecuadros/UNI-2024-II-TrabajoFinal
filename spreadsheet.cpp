@@ -1,8 +1,8 @@
 #include "spreadsheet.h"
+#include "utils.h"
 #include "expression.h"
 #include <iostream>
 #include <sstream>
-#include <cctype>
 #include <stdexcept>
 #include <iomanip>
 
@@ -23,7 +23,7 @@ void Spreadsheet::setCell(const string &key, const string &value) {
         return;
     }
 
-    if (isdigit(value[0]) || value[0] == '-') { // Es un valor numérico
+    if (isDigitManual(value[0]) || value[0] == '-') { // Es un valor numérico
         grid[key].setValue(stod(value));
     } else { // Es una fórmula
         grid[key].setFormula(value);
@@ -44,8 +44,23 @@ double Spreadsheet::evaluateCell(const string &key) {
         }
     }
     
+    // Verificar si todas las referencias en la fórmula tienen un valor definido
+    for (std::size_t i = 0; i < cell.getFormula().size(); ++i) {
+        if (isAlphaManual(cell.getFormula()[i])) { // Detecta referencia de celda
+            std::string ref;
+            while (i < cell.getFormula().size() && (isAlphaManual(cell.getFormula()[i]) || isDigitManual(cell.getFormula()[i]))) {
+                ref += cell.getFormula()[i++];
+            }
+            --i; // Retrocede un carácter
+            
+            if (cellValues.find(ref) == cellValues.end()) {
+                throw runtime_error("Error: La celda '" + ref + "' no tiene un valor definido.");
+            }
+        }
+    }
+
     // Crear un objeto Expression para evaluar la fórmula
-    Expression expr(cell.getFormula(), grid);  // Pasar la fórmula y los valores de las celdas
+    Expression expr(cell.getFormula(), cellValues);  // Pasar la fórmula y los valores de las celdas
     double result = expr.evaluate();  // Evaluar la fórmula respetando la jerarquía de operaciones
 
     // Cachear el resultado
@@ -64,14 +79,23 @@ void Spreadsheet::display() {
     for (int r = 1; r <= rows; ++r) {
         cout <<setw(2)<< r << " | ";
         for (char c = 'A'; c < 'A' + cols; ++c) {
-            string key = string(1, c) + to_string(r);
-            string value;
+            string key = string(1, c) + std::to_string(r);
+            double cellValue = grid[key].getValue();
+
             if (grid[key].hasFormula()){
-                value = to_string(grid[key].getValue());
-            } else{
-                value = to_string(grid[key].getValue());
-        }
-        cout << setw(cellWidth) << value << " ";
+                cellValue = evaluateCell(key);
+            } 
+
+            string value;
+
+            if(cellValue == static_cast<int>(cellValue)){
+                value = to_string(static_cast<int>(cellValue));
+            } else {
+                ostringstream stream;
+                stream << fixed << setprecision(2) << cellValue;
+                value = stream.str();
+            }
+            cout << setw(cellWidth) << value << " ";
     }
     cout << endl;
     }
