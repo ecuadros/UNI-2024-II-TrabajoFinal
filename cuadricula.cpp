@@ -86,3 +86,4 @@ void Cuadricula::exportarACSV(const string &nombreArchivo) const {
 
     archivo.close();
     cout << "Cuadrícula guardada en " << nombreArchivo << endl;
+} // Faltaba esta llave (único cambio del 17/12)
