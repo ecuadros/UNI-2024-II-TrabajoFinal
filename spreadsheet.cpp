@@ -8,7 +8,14 @@
 
 using namespace std;
 
-Spreadsheet::Spreadsheet(int r, int c) : rows(r), cols(c) {}
+Spreadsheet::Spreadsheet(int r, int c) : rows(r), cols(c) {
+    for (char c = 'A'; c < 'A' + cols; ++c) {
+        for (int r = 1; r <= rows; ++r) {
+            string key = string(1, c) + to_string(r);
+            grid[key] = Cell();  // Celdas vacías, inicializadas con NAN
+        }
+    }
+}
 
 bool Spreadsheet::isCellValid(const string &key) {
     if (key.empty()) return false;
@@ -19,7 +26,7 @@ bool Spreadsheet::isCellValid(const string &key) {
 
 void Spreadsheet::setCell(const string &key, const string &value) {
     if (!isCellValid(key)) {
-        cerr << "Error: Celda inválida " << key << endl;
+        cerr << "Error: Celda invalida " << key << endl;
         return;
     }
 
@@ -31,15 +38,21 @@ void Spreadsheet::setCell(const string &key, const string &value) {
 }
 
 double Spreadsheet::evaluateCell(const string &key) {
-    if (!isCellValid(key)) throw invalid_argument("Celda inválida");
+    if (!isCellValid(key)) throw invalid_argument("Celda invalida");
     Cell &cell = grid[key];
 
-    if (!cell.hasFormula()) return cell.getValue();
+    // Verificar si la celda tiene un valor definido (no es fórmula)
+    if (!cell.hasFormula()) {
+        if (!cell.isValueDefined()) {
+            throw runtime_error("Error: La celda '" + key + "' no tiene un valor definido.");
+        }
+        return cell.getValue();
+    }
 
-    // Crear un mapa de celdas con sus valores (no con objetos Cell)
+    // Crear un mapa de celdas con sus valores (solo celdas con valores, no fórmulas)
     map<string, double> cellValues;
     for (const auto& entry : grid) {
-        if (!entry.second.hasFormula()) {  // Solo tomar celdas con valores, no fórmulas
+        if (!entry.second.hasFormula() && entry.second.isValueDefined()) {  // Solo celdas con valores, no fórmulas
             cellValues[entry.first] = entry.second.getValue();
         }
     }
@@ -51,22 +64,24 @@ double Spreadsheet::evaluateCell(const string &key) {
             while (i < cell.getFormula().size() && (isAlphaManual(cell.getFormula()[i]) || isDigitManual(cell.getFormula()[i]))) {
                 ref += cell.getFormula()[i++];
             }
-            --i; // Retrocede un carácter
+            --i; // Retrocede un carácter porque el bucle incrementó `i` extra al final
             
-            if (cellValues.find(ref) == cellValues.end()) {
+            // Asegúrate de que la referencia esté definida
+            if (grid.find(ref) == grid.end() || !grid[ref].isValueDefined()) {
                 throw runtime_error("Error: La celda '" + ref + "' no tiene un valor definido.");
             }
         }
     }
 
     // Crear un objeto Expression para evaluar la fórmula
-    Expression expr(cell.getFormula(), cellValues);  // Pasar la fórmula y los valores de las celdas
+    Expression expr(cell.getFormula(), cellValues);  // Pasa la fórmula y los valores de las celdas
     double result = expr.evaluate();  // Evaluar la fórmula respetando la jerarquía de operaciones
 
     // Cachear el resultado
     cell.setValue(result);
     return result;
 }
+
 
 void Spreadsheet::display() {
     const int cellWidth = 10;
@@ -88,7 +103,9 @@ void Spreadsheet::display() {
 
             string value;
 
-            if(cellValue == static_cast<int>(cellValue)){
+            if (std::isnan(cellValue)) {
+                value = "";  // Si la celda tiene un valor NAN (vacío), mostrar vacío
+            }else if(cellValue == static_cast<int>(cellValue)){
                 value = to_string(static_cast<int>(cellValue));
             } else {
                 ostringstream stream;

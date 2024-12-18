@@ -21,7 +21,7 @@ string Expression::toPostfix() {
             if (cellValues.find(ref) != cellValues.end()) {
                 result << cellValues.at(ref) << " ";
             } else {
-                throw std::runtime_error("Error: Referencia de celda inválida '" + ref + "'");
+                throw std::runtime_error("Error: Referencia de celda invalida '" + ref + "'");
             }
         }
         else if (isDigitManual(formula[i]) || formula[i] == '.') { // Números
