@@ -3,6 +3,7 @@
 
 #include<iostream>
 #include<string>
+#include <memory>
 
 using namespace std;
 
@@ -30,7 +31,7 @@ class CELDA
     void establecerVisible(const string &cadena){m_visible = cadena;};
 
     public:
-    void actualizarCelda(CELDA **matriz);
+    void actualizarCelda(unique_ptr<CELDA[]>* & matriz);
 
     public:
     virtual ~CELDA(){};

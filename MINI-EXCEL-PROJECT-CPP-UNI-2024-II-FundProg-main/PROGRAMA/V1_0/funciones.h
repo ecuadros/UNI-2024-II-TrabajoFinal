@@ -2,15 +2,16 @@
 #define __FUNCIONES_H__
 
 #include<iostream>
+#include <memory>
 #include"tipos.h"
-#include"operadores.h"
 #include"celda.h"
+#include"operadores.h"
 
 using namespace std;
 
-bool esNombreDeCelda(string);
+bool esNombreDeCelda(const string&);
 
-POSICIONESMATRIZ convertirCeldaAMatriz(string);
+POSICIONESMATRIZ convertirCeldaAMatriz(const string&);
 
 string convertirMatrizACelda(POSICIONESMATRIZ);
 
@@ -18,8 +19,6 @@ bool existeOperador(const string&);
 
 CAD_OBJETIVO buscarCadenaObj(const string&);
 
-string operarCadena(string, CELDA **);
-
-double evaluar(string, CELDA**);
+double evaluar(string, unique_ptr<CELDA[]>* & );
 
 #endif //__FUNCIONES_H__

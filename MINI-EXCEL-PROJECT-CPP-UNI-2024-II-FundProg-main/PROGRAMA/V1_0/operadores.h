@@ -4,26 +4,30 @@
 #include<iostream>
 #include<string>
 #include"celda.h"
+#include"tipos.h"
+#include"funciones.h"
+#include <memory>
 
 using namespace std;
 
 //string strOPERADORES[8];
 
-double OPERADOR_Asignacion(string, CELDA **);
+double OPERADOR_Asignacion(string, unique_ptr<CELDA[]>* & );
 
-double OPERADOR_Adicion(string, CELDA **);
+double OPERADOR_Adicion(string, unique_ptr<CELDA[]>* & );
 
-double OPERADOR_Sustraccion(string, CELDA **);
+double OPERADOR_Sustraccion(string, unique_ptr<CELDA[]>* & );
 
-double OPERADOR_Multiplicacion(string, CELDA **);
+double OPERADOR_Multiplicacion(string, unique_ptr<CELDA[]>* & );
 
-double OPERADOR_Division(string, CELDA **);
+double OPERADOR_Division(string, unique_ptr<CELDA[]>* & );
 
-double OPERADOR_Seno(string, CELDA **);
+double OPERADOR_Seno(string, unique_ptr<CELDA[]>* & );
 
-double OPERADOR_Coseno(string, CELDA **);
+double OPERADOR_Coseno(string, unique_ptr<CELDA[]>* & );
 
-double OPERADOR_Tangente(string, CELDA **);
+double OPERADOR_Tangente(string, unique_ptr<CELDA[]>* & );
 
-double (*fOpe[8])(string, CELDA **);
+string operarCadena(const CAD_OBJETIVO , unique_ptr<CELDA[]>* & );
+
 #endif //__OPERADORES_H__

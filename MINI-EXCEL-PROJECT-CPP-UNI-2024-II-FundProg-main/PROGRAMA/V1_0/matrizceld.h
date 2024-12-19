@@ -3,12 +3,13 @@
 
 #include<iostream>
 #include<string>
+#include <memory>
 #include"celda.h"
 
 using namespace std;
 
-CELDA **genMatrizDinCeldas1(const int, const int);
+unique_ptr<CELDA[]>*  genMatrizDinCeldas1(const int, const int);
 
-void eliminarMatrizDinCeldas1(int, CELDA **);
+//void eliminarMatrizDinCeldas1(int, shared_ptr<CELDA[]>* );
 
 #endif //__MATRIZCELD_H__
